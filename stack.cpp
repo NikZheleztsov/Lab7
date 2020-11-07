@@ -1,4 +1,5 @@
-//Stack and queue implementation
+//Stack implementation
+//More than 2 elements 
 
 #include <iostream>
 #include <vector>
@@ -75,6 +76,16 @@ int main ()
     construct(root);
 
     std::string str;
+    std::cout << "In order to end input, print '-1' \nPlease, enter elements of stack:\n";
+    int a;
+	do {
+		a = 0;
+		std::cin >> a;
+		if (a != -1) push(root, a);
+    } while (a != -1);
+
+    std::cout << "End of input\n";
+
     std::cout << "Please, enter command:\n";
 
     while (!(str == "quit"))
@@ -98,7 +109,7 @@ int main ()
             std::cout << size(root) << std::endl;
         else if (str == "pop")
         {
-            std::cout << "Popped element" << pop(root)->data << std::endl;
+            std::cout << "Popped element: " << pop(root)->data << std::endl;
             print(root);
             std::cout << std::endl;
             std::cout << "Size of stack(after pop): " << size(root) << std::endl;
