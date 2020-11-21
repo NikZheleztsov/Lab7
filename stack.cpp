@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <vector>
-//#define MAX 20
 
 struct Stack_knot
 {
@@ -25,31 +24,6 @@ void construct (Stack& st)
     st.top->link= NULL;
 }
 
-void push (Stack& st, int data)
-{
-    Stack_knot* new_one = new Stack_knot;
-    new_one->data = data;
-    new_one->link = st.top;
-    st.top = new_one;
-}
-
-Stack_knot* pop (Stack& st) // return
-{
-    Stack_knot* new_st = st.top;
-    st.top = st.top->link;
-    return new_st;
-}
-
-void print(const Stack& st)
-{
-    std::cout << st.top->data;
-    Stack_knot* new_stack = st.top->link;
-    do {
-    std::cout << new_stack->data;
-    new_stack = new_stack->link;
-    } while (new_stack->link != NULL);
-}
-
 int size(const Stack& st)
 {
     int size = 1;
@@ -63,10 +37,42 @@ int size(const Stack& st)
     return size;
 }
 
+void push (Stack& st, int data)
+{
+    Stack_knot* new_one = new Stack_knot;
+    new_one->data = data;
+    new_one->link = st.top;
+    st.top = new_one;
+}
+
+Stack_knot* pop (Stack& st) // return
+{
+    if (size(st) > 2)
+    {
+        Stack_knot* new_st = st.top;
+        st.top = st.top->link;
+        return new_st;
+
+    } else {
+        std::cout << "Unable to pop an element\n";
+        return 0;
+    }
+}
+
+void print(const Stack& st)
+{
+    std::cout << st.top->data;
+    Stack_knot* new_stack = st.top->link;
+    do {
+    std::cout << new_stack->data;
+    new_stack = new_stack->link;
+    } while (new_stack->link != NULL);
+}
+
 void destruct(Stack& st)
 {
     int s = size(st);
-    for (int i = 0; i < s; i++)
+    for (int i = 0; i < s + 1; i++)
         delete pop(st);
 }
 
@@ -109,10 +115,13 @@ int main ()
             std::cout << size(root) << std::endl;
         else if (str == "pop")
         {
-            std::cout << "Popped element: " << pop(root)->data << std::endl;
-            print(root);
-            std::cout << std::endl;
-            std::cout << "Size of stack(after pop): " << size(root) << std::endl;
+            if (pop(root) != 0)
+            {
+                std::cout << "Popped element: " << pop(root)->data << std::endl;
+                print(root);
+                std::cout << std::endl;
+                std::cout << "Size of stack(after pop): " << size(root) << std::endl;
+            }
         }
     }
 
