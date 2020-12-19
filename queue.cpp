@@ -60,18 +60,16 @@ queue_knot* pop (queue& que)
 
         return new_one;
 
-    } else 
-
+    } else { 
+        std::cout << "Your queue is empty\n";
         return 0;
+    }
 }
 
 void destruct(queue& que)
 {
-	int s = size(que);
-	for (int i = 0; i < s; i++)
+    while (que.top != nullptr)
 		delete pop(que);
-
-    delete que.top;
 }
 
 void push (queue& que, int data)
@@ -111,13 +109,13 @@ int main ()
     construct(root);
 
     std::string str;
-    std::cout << "In order to end input, print ' ' \nPlease, enter elements of queue (1 or more):\n";
+    std::cout << "In order to end input, print ' ' \nPlease, enter elements of queue:\n";
     std::string a;
-    std::getline(std::cin, a);
 
     do {
-	    push(root, stoi(a));
         std::getline(std::cin, a);
+        if (a != " ")
+            push(root, stoi(a));
 	} while (a != " ");
 
     std::cout << "End of input\n";
@@ -131,11 +129,11 @@ int main ()
             std::cout << "In order to end input, print ' ' \nPlease, enter elements of queue:\n";
             std::string a;
             std::cin.ignore(INT_MAX, '\n');
-            std::getline(std::cin, a);
 
             do {
-                push(root, stoi(a));
                 std::getline(std::cin, a);
+                if (a != " ")
+                    push(root, stoi(a));
             } while (a != " ");
             std::cout << "End of input\n";
 
@@ -150,8 +148,11 @@ int main ()
         else if (str == "pop")
         {
             queue_knot* pop_elem = pop(root);
-            std::cout << "Popped element: " << pop_elem->data << std::endl;
-            delete pop_elem; // по заданию pop возвращает node. Т.к. мы его не планируем использовать, память надо очистить, чтобы избежать утечки
+            if (pop_elem != 0)
+            {
+                std::cout << "Popped element: " << pop_elem->data << std::endl;
+                delete pop_elem; // по заданию pop возвращает node. Т.к. мы его не планируем использовать, память надо очистить, чтобы избежать утечки
+            }
         } 
     }
 

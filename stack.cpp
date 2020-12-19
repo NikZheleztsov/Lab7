@@ -1,8 +1,8 @@
 //Stack implementation
-//More than 2 elements 
 
 #include <iostream>
 #include <vector>
+#include <climits>
 
 struct Stack_knot
 {
@@ -19,20 +19,24 @@ struct Stack
 
 void construct (Stack& st)
 {
-    Stack_knot* zero = new Stack_knot;
-    st.top = zero;
-    st.top->link= NULL;
+    st.top = nullptr;
 }
 
 int size(const Stack& st)
 {
-    int size = 1;
+    int size = 0;
 
-    Stack_knot* new_stack = st.top->link;
-    do {
-        ++size;
-        new_stack = new_stack->link;
-    } while (new_stack->link != NULL);
+    if (st.top != nullptr)
+    {
+        Stack_knot* new_one = st.top;
+        size++;
+        
+        while ((new_one = new_one->link) != nullptr)
+        {
+            //new_one = new_one->link;
+            size++;
+        }
+    }
 
     return size;
 }
@@ -47,33 +51,44 @@ void push (Stack& st, int data)
 
 Stack_knot* pop (Stack& st) // return
 {
-    if (size(st) > 2)
+    if (st.top != nullptr)
     {
-        Stack_knot* new_st = st.top;
-        st.top = st.top->link;
-        return new_st;
+        Stack_knot* new_one = st.top;
+        if (size(st) == 1)
+           st.top = nullptr; 
+        else 
+           st.top = new_one->link;
+        
+        new_one->link = nullptr;
+        return new_one;
 
     } else {
-        std::cout << "Unable to pop an element\n";
-        return 0;
+        std::cout << "Your stack is empty\n";
+        return nullptr;
     }
 }
 
 void print(const Stack& st)
 {
-    std::cout << st.top->data;
-    Stack_knot* new_stack = st.top->link;
-    do {
-    std::cout << new_stack->data;
-    new_stack = new_stack->link;
-    } while (new_stack->link != NULL);
+    if (st.top != nullptr)
+    {
+        Stack_knot* new_one = st.top;
+        while (new_one != nullptr)
+        {
+            std::cout << new_one->data << ' ';
+            new_one = new_one->link;
+        }
+
+    } else
+        std::cout << "Your stack is empty";
 }
 
 void destruct(Stack& st)
 {
-    int s = size(st);
-    for (int i = 0; i < s + 1; i++)
+    while (st.top != nullptr)
+    {
         delete pop(st);
+    }
 }
 
 int main () 
@@ -82,47 +97,52 @@ int main ()
     construct(root);
 
     std::string str;
-    std::cout << "In order to end input, print '-1' \nPlease, enter elements of stack:\n";
-    int a;
-	do {
-		a = 0;
-		std::cin >> a;
-		if (a != -1) push(root, a);
-    } while (a != -1);
+    std::cout << "In order to end input, print ' ' \nPlease, enter elements of stack:\n";
+    std::string a;
+
+    do {
+        std::getline(std::cin, a);
+        if (a != " ") 
+            push(root, stoi(a));
+    } while (a != " ");
 
     std::cout << "End of input\n";
 
-    std::cout << "Please, enter command:\n";
-
-    while (!(str == "quit"))
+    while (str != "quit" && str != "q")
     {
+        std::cout << "> ";
         std::cin >> str;
         if (str == "push")
         {
-            std::cout << "In order to end input, print '-1' \nPlease, enter elements of stack:\n";
-            int a;
+            std::cout << "In order to end input, print ' ' \nPlease, enter elements of stack:\n";
+            std::string a;
+            std::cin.ignore(INT_MAX, '\n');
+
             do {
-                a = 0;
-                std::cin >> a;
-                if (a != -1) push(root, a);
-            } while (a != -1);
+                std::getline(std::cin, a);
+                if (a != " ")
+                    push(root, stoi(a));
+            } while (a != " ");
             std::cout << "End of input\n";
+
         } else if (str == "print")
         {
             print(root);
             std::cout << std::endl;
+
         } else if (str == "size")
             std::cout << size(root) << std::endl;
+
         else if (str == "pop")
         {
-            if (pop(root) != 0)
+            Stack_knot* pop_elem = pop(root);
+            if (pop_elem != 0)
             {
-                std::cout << "Popped element: " << pop(root)->data << std::endl;
-                print(root);
-                std::cout << std::endl;
-                std::cout << "Size of stack(after pop): " << size(root) << std::endl;
+                std::cout << "Popped element: " << pop_elem->data << std::endl;
             }
-        }
+
+            delete pop_elem; 
+        } 
     }
 
     destruct(root);
