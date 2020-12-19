@@ -1,6 +1,7 @@
 //Queue implementation
 
 #include <iostream>
+#include <climits>
 
 struct queue_knot
 {
@@ -16,34 +17,53 @@ struct queue
 
 void construct(queue& que)
 {
-	que.top = NULL;
-	que.bottom = NULL;
+	que.top = nullptr;
+	que.bottom = nullptr;
 }
 
 unsigned int size (const queue& que) 
 {
     int size = 1;
-	queue_knot* new_one = que.top;
-
-	while (new_one->link != NULL)
+    if (que.top != nullptr)
     {
-			 ++size;
-	  		 new_one = new_one->link;
-    }
+        queue_knot* new_one = que.top;
 
-    return size;
+        while (new_one->link != nullptr)
+        {
+            ++size;
+            new_one = new_one->link;
+        }
+
+        return size;
+
+    } else 
+    {
+        std::cout << "Your queue is empty\n";
+        return 0;
+    }
 }
 
 queue_knot* pop (queue& que) 
 {
-    if (size(que) > 1) 
+    if (que.top != nullptr) 
     {
         queue_knot* new_one = que.top;
-        que.top = que.top->link;
+
+        if (que.top != que.bottom)
+            que.top = que.top->link;
+        else {
+            que.top = nullptr;
+            que.bottom = nullptr;
+        }
+
+        new_one->link = nullptr;
+
         return new_one;
-    } else return 0;
+
+    } else 
+
+        return 0;
 }
-	
 
 void destruct(queue& que)
 {
@@ -58,12 +78,13 @@ void push (queue& que, int data)
 {
 	queue_knot* new_knot = new queue_knot;
 	new_knot->data = data;
-	new_knot->link = NULL;
-	if (que.bottom != NULL)
+	new_knot->link = nullptr;
+
+	if (que.bottom != nullptr)
 		que.bottom -> link = new_knot;
 	que.bottom = new_knot;
 
-	if (que.top == NULL)
+	if (que.top == nullptr)
 	{
 		que.top = new_knot;
 	}
@@ -71,20 +92,17 @@ void push (queue& que, int data)
 	
 void print (const queue& que) 
 {
-	queue_knot* new_one; 
-	std::cout << que.top->data;
-	if (que.top->link != NULL)
-	{
-		new_one = que.top->link;
-	
-		do {
-			std::cout << new_one->data;
-			if (new_one->link != 0)
-				new_one = new_one->link;
-		} while (new_one ->link != NULL);
+    if (que.top != nullptr)
+    { 
+        queue_knot* new_one = que.top;
+        while (new_one != nullptr)
+        {
+            std::cout << new_one->data << ' ';
+            new_one = new_one->link;
+        }
 
-	    std::cout << new_one->data;
-	}
+    } else 
+        std::cout << "Your queue is empty";
 }
 
 int main () 
@@ -93,28 +111,32 @@ int main ()
     construct(root);
 
     std::string str;
-    std::cout << "In order to end input, print '-1' \nPlease, enter elements of queue (1 or more):\n";
-	int a;
+    std::cout << "In order to end input, print ' ' \nPlease, enter elements of queue (1 or more):\n";
+    std::string a;
+    std::getline(std::cin, a);
+
     do {
-		a = 0;
-		std::cin >> a;
-	    if (a != -1) push(root, a);
-	} while (a != -1);
+	    push(root, stoi(a));
+        std::getline(std::cin, a);
+	} while (a != " ");
+
     std::cout << "End of input\n";
 
-    while (str != "quit")
+    while (str != "quit" && str != "q")
     {
-        std::cout << "Please, enter command:\n";
+        std::cout << "> ";
         std::cin >> str;
         if (str == "push")
         {
-            std::cout << "In order to end input, print '-1' \nPlease, enter elements of queue:\n";
-            int a;
+            std::cout << "In order to end input, print ' ' \nPlease, enter elements of queue:\n";
+            std::string a;
+            std::cin.ignore(INT_MAX, '\n');
+            std::getline(std::cin, a);
+
             do {
-                a = 0;
-                std::cin >> a;
-                if (a != -1) push(root, a);
-            } while (a != -1);
+                push(root, stoi(a));
+                std::getline(std::cin, a);
+            } while (a != " ");
             std::cout << "End of input\n";
 
         } else if (str == "print")
@@ -127,13 +149,9 @@ int main ()
 
         else if (str == "pop")
         {
-            if (pop(root) != 0)
-            {
-                std::cout << "Popped element: " << pop(root)->data << std::endl;
-                print(root);
-                std::cout << std::endl;
-                std::cout << "Size of stack(after pop): " << size(root) << std::endl;
-            } else std::cout << "Unable to pop an element\n";
+            queue_knot* pop_elem = pop(root);
+            std::cout << "Popped element: " << pop_elem->data << std::endl;
+            delete pop_elem; // по заданию pop возвращает node. Т.к. мы его не планируем использовать, память надо очистить, чтобы избежать утечки
         } 
     }
 
