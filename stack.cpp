@@ -103,7 +103,13 @@ int main ()
     do {
         std::getline(std::cin, a);
         if (a != " ") 
+        {
+            try {
             push(root, stoi(a));
+            } catch (...) {
+                std::cout << "Wrong format of the data\n";
+            }
+        }
     } while (a != " ");
 
     std::cout << "End of input\n";
@@ -121,7 +127,13 @@ int main ()
             do {
                 std::getline(std::cin, a);
                 if (a != " ")
+                {
+                    try {
                     push(root, stoi(a));
+                    } catch (...) {
+                        std::cout << "Wrong format of the data\n";
+                    }
+                }
             } while (a != " ");
             std::cout << "End of input\n";
 

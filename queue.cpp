@@ -109,13 +109,19 @@ int main ()
     construct(root);
 
     std::string str;
-    std::cout << "In order to end input, print ' ' \nPlease, enter elements of queue:\n";
+    std::cout << "In order to end input, print ' ' (space) \nPlease, enter elements of queue:\n";
     std::string a;
 
     do {
         std::getline(std::cin, a);
         if (a != " ")
-            push(root, stoi(a));
+        {
+            try {
+                push(root, stoi(a));
+            } catch (...) {
+                std::cout << "Wrong format of data\n";
+            }
+        }
 	} while (a != " ");
 
     std::cout << "End of input\n";
@@ -126,14 +132,20 @@ int main ()
         std::cin >> str;
         if (str == "push")
         {
-            std::cout << "In order to end input, print ' ' \nPlease, enter elements of queue:\n";
+            std::cout << "In order to end input, print ' ' (space) \nPlease, enter elements of queue:\n";
             std::string a;
             std::cin.ignore(INT_MAX, '\n');
 
             do {
                 std::getline(std::cin, a);
                 if (a != " ")
-                    push(root, stoi(a));
+                {
+                    try {
+                        push(root, stoi(a));
+                    } catch (...) {
+                        std::cout << "Wrong format of data\n";
+                    }
+                }
             } while (a != " ");
             std::cout << "End of input\n";
 
@@ -151,7 +163,8 @@ int main ()
             if (pop_elem != 0)
             {
                 std::cout << "Popped element: " << pop_elem->data << std::endl;
-                delete pop_elem; // по заданию pop возвращает node. Т.к. мы его не планируем использовать, память надо очистить, чтобы избежать утечки
+                delete pop_elem; // по заданию pop возвращает node. Т.к. мы его не планируем использовать,
+                                 // память надо очистить, чтобы избежать утечки
             }
         } 
     }
